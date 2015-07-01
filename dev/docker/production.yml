@@ -1,0 +1,39 @@
+memcached:
+  extends:
+    file: common.yml
+    service: memcached
+mysqldata:
+  extends:
+    file: common.yml
+    service: mysqldata
+mysql:
+  extends:
+    file: common.yml
+    service: mysql
+  volumes_from:
+    - mysqldata
+uploads:
+  extends:
+    file: common.yml
+    service: uploads
+  volumes:
+    - /srv/www/wordpress/content/uploads
+php:
+  extends:
+    file: common.yml
+    service: php
+  links:
+    - memcached
+    - mysql
+  volumes_from:
+    - uploads
+nginx:
+  extends:
+    file: common.yml
+    service: nginx
+  links:
+    - php
+  volumes_from:
+    - uploads
+  ports:
+    - "80:80"

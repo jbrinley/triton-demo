@@ -1,0 +1,49 @@
+memcached:
+  image: memcached:1.4
+  ports:
+    - "11211"
+mysqldata:
+  image: busybox
+  volumes:
+    - /var/lib/mysql
+  command: /bin/true
+mysql:
+  image: mysql:5.6
+  ports:
+    - "3306"
+  environment:
+    - MYSQL_ROOT_PASSWORD=password
+    - MYSQL_DATABASE=wordpress
+    - MYSQL_USER=wp_user
+    - MYSQL_PASSWORD=wp_password
+wpcore: # for mounting wordpress core files during local development
+  image: busybox
+  volumes:
+    - ../../src/wp:/srv/www/wordpress/wp
+  command: /bin/true
+webdata: # for mounting project files during local development
+  image: busybox
+  volumes:
+    - ../../src/content:/srv/www/wordpress/content
+    - ../../src/index.php:/srv/www/wordpress/index.php
+    - ../../src/memcached.php:/srv/www/wordpress/memcached.php
+    - ../../src/wp-config.php:/srv/www/wordpress/wp-config.php
+  command: /bin/true
+uploads: # for mounting uploaded media during local development
+  image: busybox
+  volumes:
+    - ../../uploads:/srv/www/wordpress/content/uploads
+  command: /bin/true
+php:
+  image: jbrinley/triton-demo-php:latest
+  environment:
+    - WP_DB_NAME=wordpress
+    - WP_DB_USER=wp_user
+    - WP_DB_PASSWORD=wp_password
+    - WP_DB_HOST=mysql
+nginx:
+  image: jbrinley/triton-demo-nginx:latest
+  environment:
+    - VIRTUAL_HOST=wordpress.tribe
+  ports:
+    - "80"

@@ -1,0 +1,6 @@
+.git/
+uploads/
+upgrade/
+*.log
+*.sql
+/src/local-config.php

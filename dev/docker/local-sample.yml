@@ -1,0 +1,49 @@
+memcached:
+  extends:
+    file: common.yml
+    service: memcached
+mysqldata:
+  extends:
+    file: common.yml
+    service: mysqldata
+mysql:
+  extends:
+    file: common.yml
+    service: mysql
+  volumes_from:
+    - mysqldata
+webdata:
+  extends:
+    file: common.yml
+    service: webdata
+  #volumes: # uncomment if you have a local-config.php file
+  #  - ../../src/local-config.php:/srv/www/wordpress/local-config.php
+uploads:
+  extends:
+    file: common.yml
+    service: uploads
+php:
+  extends:
+    file: common.yml
+    service: php
+  links:
+    - memcached
+    - mysql
+  volumes_from:
+    - webdata
+    - uploads
+  #volumes: # uncomment to work on php config without requiring a rebuild
+  #  - php/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+nginx:
+  extends:
+    file: common.yml
+    service: nginx
+  links:
+    - php
+  volumes_from:
+    - webdata
+    - uploads
+  #volumes: # uncomment to work on nginx config without requiring a rebuild
+  #  - nginx:/etc/nginx:ro
+  #ports: # uncomment if you don't have a reverse proxy for local domains
+  #  - "80:80"
