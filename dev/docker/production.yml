@@ -12,6 +12,9 @@ mysql:
     service: mysql
   volumes_from:
     - mysqldata
+  environment:
+    - MYSQL_ROOT_PASSWORD=mQ5gcrxcDcJVaDzYA6Nc
+    - MYSQL_PASSWORD=Sv3Qva2w6FFVJJA95Zsr
 uploads:
   extends:
     file: common.yml
@@ -25,6 +28,8 @@ php:
   links:
     - memcached
     - mysql
+  environment:
+    - WP_DB_PASSWORD=Sv3Qva2w6FFVJJA95Zsr
   volumes_from:
     - uploads
 nginx:
