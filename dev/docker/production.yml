@@ -2,43 +2,35 @@ memcached:
   extends:
     file: common.yml
     service: memcached
-mysqldata:
-  extends:
-    file: common.yml
-    service: mysqldata
+  mem_limit: 128m
 mysql:
   extends:
     file: common.yml
     service: mysql
+  mem_limit: 128m
   volumes_from:
-    - mysqldata
+    - wordpress_mysqldata
   environment:
     - MYSQL_ROOT_PASSWORD=mQ5gcrxcDcJVaDzYA6Nc
     - MYSQL_PASSWORD=Sv3Qva2w6FFVJJA95Zsr
-uploads:
-  extends:
-    file: common.yml
-    service: uploads
-  volumes:
-    - /srv/www/wordpress/content/uploads
 php:
   extends:
     file: common.yml
     service: php
+  mem_limit: 128m
   links:
     - memcached
     - mysql
   environment:
     - WP_DB_PASSWORD=Sv3Qva2w6FFVJJA95Zsr
   volumes_from:
-    - uploads
+    - wordpress_uploads
 nginx:
   extends:
     file: common.yml
     service: nginx
+  mem_limit: 128m
   links:
     - php
   volumes_from:
-    - uploads
-  ports:
-    - "80:80"
+    - wordpress_uploads

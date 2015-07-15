@@ -1,7 +1,5 @@
 memcached:
   image: memcached:1.4
-  ports:
-    - "11211"
 mysqldata:
   image: busybox
   volumes:
@@ -9,8 +7,6 @@ mysqldata:
   command: /bin/true
 mysql:
   image: mysql:5.6
-  ports:
-    - "3306"
   environment:
     - MYSQL_ROOT_PASSWORD=password
     - MYSQL_DATABASE=wordpress
